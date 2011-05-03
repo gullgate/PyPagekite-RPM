@@ -1,11 +1,11 @@
 Name:           pagekite
-Version:        0.3.18
+Version:        0.3.19
 Release:	0%{?dist}
 Summary:        PageKite is a system for running publicly visible servers (generally web servers) on machines without a direct connection to the Internet behind restrictive firewalls.
 Group:          Applications/System
 License:        GPLv2+
 URL:            https://pagekite.net/
-Source0:        pagekite-0.3.18.tar.gz
+Source0:        pagekite-0.3.19.tar.gz
 Source1:	pagekite.init
 Source2:	pagekite.sysconfig
 Source3:	pagekite.logrotate
@@ -99,5 +99,5 @@ exit 0
 %{_initrddir}/pagekite
 
 %changelog
-* Mon May 2 2011 Edvin Dunaway <edvin@eddinn.net> - 0.3.18-0
-- Initial build
+* Tue May 3 2011 Edvin Dunaway <edvin@eddinn.net> - updated pagekite binary to stable 0.3.19-0
+* Mon May 2 2011 Edvin Dunaway <edvin@eddinn.net> - 0.3.18-0 - Initial build
