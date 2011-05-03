@@ -1,17 +1,19 @@
 Name:           pagekite
 Version:        0.3.18
-Release:	0-stable-%{?dist}
+Release:	0%{?dist}
 Summary:        PageKite is a system for running publicly visible servers (generally web servers) on machines without a direct connection to the Internet behind restrictive firewalls.
 Group:          Applications/System
 License:        GPLv2+
 URL:            https://pagekite.net/
-Source0:        http://pagekite.net/pk/pagekite.py
+Source0:        pagekite-0.3.18.tar.gz
 Source1:	pagekite.init
 Source2:	pagekite.sysconfig
 Source3:	pagekite.logrotate
 Source4:	README.fedora
 Source5:	pagekite.rc.sample
 Source6:	local.rc.sample
+Source7:	frontend.rc.sample
+Source8:	pagekite.net.ca_cert
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
 
@@ -40,13 +42,15 @@ install -d %{buildroot}/%{_bindir}
 install -d %{buildroot}/%{_initrddir}
 install -d %{buildroot}/%{_sysconfdir}/logrotate.d
 install -d %{buildroot}/%{_sysconfdir}/sysconfig
-
+install -d %{buildroot}/%{_sysconfdir}/pagekite
 install -d %{buildroot}/%{_localstatedir}/log/pagekite
 
-install -p -m 755 pagekite.rc.sample %{buildroot}/%{_sysconfdir}/pagekite/pagekite.rc
-install -p -m 755 frontend.rc.sample %{buildroot}/%{_sysconfdir}/pagekite/frontend.rc
-install -p -m 600 local.rc.sample %{buildroot}/%{_sysconfdir}/pagekite/local.rc
-install -p -m 755 pagekite.net.ca_cert %{buildroot}/%{_sysconfdir}/pagekite/pagekite.net.ca_cert
+#install -p -m 755 pagekite.rc.sample %{buildroot}/%{_sysconfdir}/pagekite/pagekite.rc
+install -p -m 755 %{SOURCE5} %{buildroot}/%{_sysconfdir}/pagekite/pagekite.rc
+#install -p -m 755 frontend.rc.sample %{buildroot}/%{_sysconfdir}/pagekite/frontend.rc
+install -p -m 755 %{SOURCE7} %{buildroot}/%{_sysconfdir}/pagekite/frontend.rc
+install -p -m 600 %{SOURCE6} %{buildroot}/%{_sysconfdir}/pagekite/local.rc
+install -p -m 755 %{SOURCE8} %{buildroot}/%{_sysconfdir}/pagekite/pagekite.net.ca_cert
 install -p -m 755 %{SOURCE1} %{buildroot}/%{_initrddir}/pagekite
 install -p -m 644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/sysconfig/pagekite
 install -p -m 644 %{SOURCE3} %{buildroot}/%{_sysconfdir}/logrotate.d/pagekite
@@ -76,17 +80,19 @@ exit 0
 %files
 %defattr(-,root,root,-)
 %doc pagekite.rc.sample local.rc.sample frontend.rc.sample
-%doc README.fedora README.md setup.py README.contrib
+%doc README.fedora README.md setup.py 
 %doc HISTORY.txt agpl-3.0.txt
 
 %{_bindir}/pagekite.py
 %exclude %{_bindir}/pagekite.py[co]
 
-%{_datadir}/pagekite
-%{python_sitelib}/pagekite/
+#%{_datadir}/pagekite
+#%{python_sitelib}/pagekite/
 
 %config(noreplace) %{_sysconfdir}/pagekite/pagekite.rc
+%config(noreplace) %{_sysconfdir}/pagekite/frontend.rc
 %config(noreplace) %{_sysconfdir}/pagekite/local.rc
+%config(noreplace) %{_sysconfdir}/pagekite/pagekite.net.ca_cert
 %config(noreplace) %{_sysconfdir}/logrotate.d/pagekite
 %config(noreplace) %{_sysconfdir}/sysconfig/pagekite
 

@@ -1,0 +1,11 @@
+Some useful information about pagekite as packaged by Fedora
+--------------------------------------------------------------------
+
+It installs and runs as a service, so you can start it with:
+
+  service pagekite start
+
+and enable it at boot time with:
+
+  chkconfig pagekite on
+
