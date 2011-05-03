@@ -18,7 +18,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
 
 BuildRequires:  python python-devel
-Requires:       pyopenssl
+Requires:       pyOpenSSL
 
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
@@ -45,9 +45,7 @@ install -d %{buildroot}/%{_sysconfdir}/sysconfig
 install -d %{buildroot}/%{_sysconfdir}/pagekite
 install -d %{buildroot}/%{_localstatedir}/log/pagekite
 
-#install -p -m 755 pagekite.rc.sample %{buildroot}/%{_sysconfdir}/pagekite/pagekite.rc
 install -p -m 755 %{SOURCE5} %{buildroot}/%{_sysconfdir}/pagekite/pagekite.rc
-#install -p -m 755 frontend.rc.sample %{buildroot}/%{_sysconfdir}/pagekite/frontend.rc
 install -p -m 755 %{SOURCE7} %{buildroot}/%{_sysconfdir}/pagekite/frontend.rc
 install -p -m 600 %{SOURCE6} %{buildroot}/%{_sysconfdir}/pagekite/local.rc
 install -p -m 755 %{SOURCE8} %{buildroot}/%{_sysconfdir}/pagekite/pagekite.net.ca_cert
