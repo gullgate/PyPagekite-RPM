@@ -1,1 +1,3 @@
-This is an RPM packaging project for PyPagekite - please note that this RPM is still EXPERIMENTAL and far from a complete or fully functional version!
+This is an RPM packaging project for PyPagekite.
+
+- latest stable beta release is pagekite-0.3.19-0.noarch.rpm and pagekite-0.3.19-0.src.rpm
