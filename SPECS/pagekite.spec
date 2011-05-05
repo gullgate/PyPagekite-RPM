@@ -66,7 +66,7 @@ rm -rf %{buildroot}
 
 %post
 /sbin/chkconfig --add pagekite
-/sbin/service pagekite stop
+/sbin/service pagekite stop > /dev/null 2>&1
 exit 0
 
 %preun
@@ -101,6 +101,8 @@ exit 0
 %{_initrddir}/pagekite
 
 %changelog
+* Thu May 5 2011 Edvin Dunaway <edvin@eddinn.net> 0.3.19-0
+- adapting init script and message handling
 * Wed May 4 2011 Edvin Dunaway <edvin@eddinn.net> 0.3.19-0
 - script fixup and adding manpage
 * Tue May 3 2011 Edvin Dunaway <edvin@eddinn.net> 0.3.19-0
