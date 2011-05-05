@@ -73,7 +73,7 @@ case "$1" in
 	pagekite=`cat $PAGEKITE_PID 2>/dev/null`
 	echo -n "Reloading pagekite..."
 	if [ -n "${pagekite}" ] && [ -e /proc/"${pagekite}" ]; then
-		kill -HUP pagekite.py;
+		kill -HUP pagekite;
         	RETVAL=$?
     	fi
     	if [ $RETVAL -ne 0 ]; then
