@@ -19,7 +19,7 @@ prog="pagekite"
 [ ${NETWORKING} = "no" ] && exit 0
 
 # Set default pagekite configuration.
-PAGEKITEOPTIONS="--clean --optfile=/etc/pagekite/pagekite.rc"
+PAGEKITEOPTIONS="-Z --clean --optfile=/etc/pagekite/pagekite.rc --pidfile=$PAGEKITE_PID"
 PAGEKITE_PID=/var/run/pagekite.pid
 
 # Source pagekite configuration.
@@ -38,7 +38,7 @@ case "$1" in
   start)
 	# Start daemon.
 	echo -n $"Starting $prog: "
-	daemon $NICELEVEL pagekite.py $PAGEKITEOPTIONS -r $PAGEKITE_PID
+	daemon $NICELEVEL pagekite.py $PAGEKITEOPTIONS
 	RETVAL=$?
         echo
 	if [ $RETVAL = 0 ]; then
