@@ -17,9 +17,10 @@
 HOSTNAME=$(hostname)
 export HOSTNAME
 
-CONTROL=/usr/bin/pagekite
+CONTROL=/usr/bin/pagekite.py
 CRONLOCK=/var/lock/subsys/pagekite.init
 LOCKFILE=/var/lock/subsys/pagekite
+#DAEMON_ARGS="--pidfile=$PIDFILE --clean --optfile=/etc/pagekite/pagekite.rc"
 RETVAL=0
 
 [ -f /etc/sysconfig/pagekite ] && . /etc/sysconfig/pagekite
