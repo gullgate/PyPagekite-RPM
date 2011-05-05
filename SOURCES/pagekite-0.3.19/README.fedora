@@ -9,3 +9,7 @@ and enable it at boot time with:
 
   chkconfig pagekite on
 
+all configuration is under /etc/pagekite/*.rc
+
+https://pagekite.net/wiki/
+https://pagekite.net/support/

@@ -15,7 +15,6 @@ Source6: local.rc.sample
 Source7: frontend.rc.sample
 Source8: pagekite.net.ca_cert
 Source9: pagekite.1.gz
-#Source10: pagekite.log
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: python python-devel
@@ -54,8 +53,6 @@ install -p -m 644 %{SOURCE8} %{buildroot}/%{_sysconfdir}/pagekite/pagekite.net.c
 install -p -m 755 %{SOURCE1} %{buildroot}/%{_initrddir}/pagekite
 install -p -m 644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/sysconfig/pagekite
 install -p -m 644 %{SOURCE3} %{buildroot}/%{_sysconfdir}/logrotate.d/pagekite
-#install -p -m 644 %{SOURCE10} %{buildroot}/%{_localstatedir}/log/pagekite/pagekite.log
-#install -p -m 644 %{SOURCE9} %{buildroot}/%{_mandir}/man1/pagekite.1.gz
 touch %{buildroot}/%{_localstatedir}/log/pagekite/pagekite.log
 cp %{SOURCE9} %{buildroot}/%{_mandir}/man1/pagekite.1.gz
 
@@ -81,25 +78,23 @@ exit 0
 
 %files
 %defattr(-,root,root)
-%doc README.fedora README.md
-%doc HISTORY.txt agpl-3.0.txt pagekite.1.gz pagekite.1
+%doc README.fedora README.md pagekite.1.gz
+%doc HISTORY.txt agpl-3.0.txt
 %doc pagekite.rc.sample local.rc.sample frontend.rc.sample
 %{_mandir}/man1/*
 %{_localstatedir}/log/pagekite
-%{_bindir}/pagekite.py
-%exclude %{_bindir}/pagekite.py[co]
-#%{_datadir}/pagekite
-#%{python_sitelib}/pagekite/
-
+%{_bindir}/*.py
+#%{_bindir}/pagekite.py
+#%{_bindir}/pagekite_logparse.py
+#%{_bindir}/pagekite_test.py
+#%{_bindir}/droiddemo.py
+%exclude %{_bindir}/*.py[co]
 %config(noreplace) %{_sysconfdir}/pagekite/pagekite.rc
 %config(noreplace) %{_sysconfdir}/pagekite/frontend.rc
 %config(noreplace) %{_sysconfdir}/pagekite/local.rc
 %config(noreplace) %{_sysconfdir}/pagekite/pagekite.net.ca_cert
 %config(noreplace) %{_sysconfdir}/logrotate.d/pagekite
 %config(noreplace) %{_sysconfdir}/sysconfig/pagekite
-
-#%ghost %{_localstatedir}/log/pagekite
-
 %{_initrddir}/pagekite
 
 %changelog
