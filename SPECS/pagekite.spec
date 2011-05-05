@@ -43,6 +43,7 @@ install -d %{buildroot}/%{_initrddir}
 install -d %{buildroot}/%{_sysconfdir}/logrotate.d
 install -d %{buildroot}/%{_sysconfdir}/sysconfig
 install -d %{buildroot}/%{_sysconfdir}/pagekite
+install -d %{buildroot}/%{_localstatedir}/log
 install -d %{buildroot}/%{_localstatedir}/log/pagekite
 install -d %{buildroot}/%{_mandir}/man1
 install -p -m 644 %{SOURCE5} %{buildroot}/%{_sysconfdir}/pagekite/pagekite.rc
