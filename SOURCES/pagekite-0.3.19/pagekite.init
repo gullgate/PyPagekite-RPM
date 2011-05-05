@@ -68,7 +68,8 @@ case "$1" in
 	status pagekite.py
 	RETVAL=$?
 	;;
-  reload)  {
+  reload)
+#	{
 #	RETVAL=1
 #	pagekite=`cat $PAGEKITE_PID 2>/dev/null`
 #	echo -n "Reloading pagekite..."
