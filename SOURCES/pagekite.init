@@ -69,21 +69,22 @@ case "$1" in
 	RETVAL=$?
 	;;
   reload)  {
-    RETVAL=1
-    pagekite=`cat $PAGEKITE_PID 2>/dev/null`
-    echo -n "Reloading pagekite..."
-    if [ -n "${pagekite}" ] && [ -e /proc/"${pagekite}" ]; then
-        kill -HUP pagekite.py;
-        RETVAL=$?
-    fi
-    if [ $RETVAL -ne 0 ]; then
-        failure
-    else
-        success
-    fi
-    echo
-    return $RETVAL
-}
+	RETVAL=1
+	pagekite=`cat $PAGEKITE_PID 2>/dev/null`
+	echo -n "Reloading pagekite..."
+	if [ -n "${pagekite}" ] && [ -e /proc/"${pagekite}" ]; then
+		kill -HUP pagekite.py;
+        	RETVAL=$?
+    	fi
+    	if [ $RETVAL -ne 0 ]; then
+        	failure
+    	else
+        	success
+    	fi
+    	echo
+    	return $RETVAL
+	}
+	;;
   *)
 	echo "Usage: $0 {start|stop|reload|restart|status|condrestart}"
 	RETVAL=1
