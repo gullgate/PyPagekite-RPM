@@ -1,96 +1,93 @@
-#!/bin/bash
+#!/bin/sh
 #
-# pagekite     This shell script enables pagekite
-#
-# Author:       Edvin Dunaway <edvin@eddinn.net>
-#
-# chkconfig:	- 50 01
-#
-# description:  Enable execution of pagekite
-# config:	/etc/pagekite/pagekite.rc
-#
+# pagekite This script starts and stops the pagekite daemon
+# processname: pagekite
+# chkconfig:    - 50 01
+# config:       /etc/pagekite/pagekite.rc
+# description: pagekite is a Python script to display local \
+# content to the web for machines behind a restrictive firewall
 
-# source function library
+# Source function library.
 . /etc/rc.d/init.d/functions
 
-# Make sure HOSTNAME is in the environment
-HOSTNAME=$(hostname)
-export HOSTNAME
+prog="pagekite"
 
-CONTROL=/usr/bin/pagekite.py
-CRONLOCK=/var/lock/subsys/pagekite.init
-LOCKFILE=/var/lock/subsys/pagekite
-#DAEMON_ARGS="--pidfile=$PIDFILE --clean --optfile=/etc/pagekite/pagekite.rc"
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ ${NETWORKING} = "no" ] && exit 0
+
+# Set default pagekite configuration.
+PAGEKITEOPTIONS="--clean --optfile=/etc/pagekite/pagekite.rc"
+PAGEKITE_PID=/var/run/pagekite.pid
+
+# Source pagekite configuration.
+if [ -f /etc/sysconfig/pagekite ] ; then
+	. /etc/sysconfig/pagekite
+fi
+
+[ -f /usr/bin/pagekite.py -o -f /usr/local/bin/pagekite.py ] || exit 0
+PATH=$PATH:/usr/bin:/usr/local/bin
+
+# By default it's all good
 RETVAL=0
 
-[ -f /etc/sysconfig/pagekite ] && . /etc/sysconfig/pagekite
-
-c_start() {
-	echo -n $"Enabling pagekite: "
-	touch "$CRONLOCK" && success || failure
-	RETVAL=$?
-	echo
-}
-
-c_stop() {
-	echo -n $"Disabling pagekite: "
-	rm -f "$CRONLOCK" && success || failure
-	RETVAL=$?
-	echo
-}
-
-c_restart() {
-	c_stop
-	c_start
-}
-
-c_condrestart() {
-	[ -f "$CRONLOCK" ] && c_restart
-}
-
-c_status() {
-	if [ -f $CRONLOCK ]; then
-		echo $"Pagekite is enabled."
-		RETVAL=0
-	else
-		echo $"Pagekite is disabled."
-		RETVAL=3
-	fi
-}
-
-d_condrestart() { $CONTROL condrestart; RETVAL=$?; }
-d_restart()     { $CONTROL restart;     RETVAL=$?; }
-d_start()       { $CONTROL start;       RETVAL=$?; }
-d_status()      { $CONTROL status;      RETVAL=$?; }
-d_stop()        { $CONTROL stop;        RETVAL=$?; }
-
-condrestart() { if [ $DAEMON = "yes" ]; then d_condrestart; else c_restart; fi }
-restart()     { if [ $DAEMON = "yes" ]; then d_restart;     else c_restart; fi }
-start()       { if [ $DAEMON = "yes" ]; then d_start;       else c_start;   fi }
-status()      { if [ $DAEMON = "yes" ]; then d_status;      else c_status;  fi }
-stop()        { if [ $DAEMON = "yes" ]; then d_stop;        else c_stop;    fi }
-
+# See how we were called.
 case "$1" in
   start)
-	start
-	;;
-  stop) 
-	stop
-	;;
-  restart|force-reload)
-	restart
-	;;
-  reload)
-	;;
+	# Start daemon.
+	echo -n $"Starting $prog: "
+	daemon $NICELEVEL pagekite.py $PAGEKITEOPTIONS -r $PAGEKITE_PID
+	RETVAL=$?
+        echo
+	if [ $RETVAL = 0 ]; then
+		touch /var/lock/subsys/pagekite
+	fi
+        ;;
+  stop)
+        # Stop daemons.
+        echo -n $"Stopping $prog: "
+        killproc pagekite.py
+        RETVAL=$?
+        echo
+	if [ $RETVAL = 0 ]; then
+		rm -f /var/lock/subsys/pagekite
+		rm -f $PAGEKITE_PID
+	fi
+        ;;
+  restart)
+        $0 stop
+	sleep 3
+        $0 start
+        ;;
   condrestart)
-	condrestart
-	;;
+       [ -e /var/lock/subsys/pagekite ] && $0 restart
+       ;;
   status)
-	status
+	status pagekite.py
+	RETVAL=$?
 	;;
+  reload)  {
+    RETVAL=1
+    pagekite=`cat $PAGEKITE_PID 2>/dev/null`
+    echo -n "Reloading pagekite..."
+    if [ -n "${pagekite}" ] && [ -e /proc/"${pagekite}" ]; then
+        kill -HUP pagekite.py;
+        RETVAL=$?
+    fi
+    if [ $RETVAL -ne 0 ]; then
+        failure
+    else
+        success
+    fi
+    echo
+    return $RETVAL
+}
   *)
-	echo $"Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
-	exit 1
+	echo "Usage: $0 {start|stop|reload|restart|status|condrestart}"
+	RETVAL=1
+	;;
 esac
 
 exit $RETVAL
