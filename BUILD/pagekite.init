@@ -36,7 +36,6 @@ RETVAL=0
 # See how we were called.
 case "$1" in
   start)
-	# Start daemon.
 	echo -n $"Starting $prog: "
 	daemon $NICELEVEL pagekite.py $PAGEKITEOPTIONS
 	RETVAL=$?
@@ -46,7 +45,6 @@ case "$1" in
 	fi
         ;;
   stop)
-        # Stop daemons.
         echo -n $"Stopping $prog: "
         killproc pagekite.py
         RETVAL=$?
@@ -62,32 +60,31 @@ case "$1" in
         $0 start
         ;;
   condrestart)
-       [ -e /var/lock/subsys/pagekite ] && $0 restart
+       [ -e /var/lock/subsys/pagekite ] && $0 kill -HUP 'cat /var/run/pagekite.py.pid'
        ;;
   status)
 	status pagekite.py
 	RETVAL=$?
 	;;
   reload)
-#	{
-#	RETVAL=1
-#	pagekite=`cat $PAGEKITE_PID 2>/dev/null`
-#	echo -n "Reloading pagekite..."
-#	if [ -n "${pagekite}" ] && [ -e /proc/"${pagekite}" ]; then
-#		kill -HUP $pagekite;
-#        	RETVAL=$?
-#    	fi
-#    	if [ $RETVAL -ne 0 ]; then
-#        	failure
-#    	else
-#        	success
-#    	fi
-#    	echo
-#    	#return $RETVAL
-#	}
+	{
+	RETVAL=1
+	pagekite='cat $PAGEKITE_PID 2>/dev/null'
+	echo -n "Reloading pagekite..."
+	if [ -n "${pagekite}" ] && [ -e /proc/"${pagekite}" ]; then
+		kill -HUP $pagekite;
+        	RETVAL=$?
+    	fi
+    	if [ $RETVAL -ne 0 ]; then
+        	failure
+    	else
+        	success
+    	fi
+    	echo $RETVAL
+	}
 	;;
   *)
-	echo "Usage: $0 {start|stop|restart|status|condrestart}"
+	echo "Usage: $0 {start|stop|restarti|reload|status|condrestart}"
 	RETVAL=1
 	;;
 esac
