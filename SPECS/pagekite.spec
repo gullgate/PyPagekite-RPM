@@ -54,7 +54,6 @@ install -p -m 644 %{SOURCE8} %{buildroot}/%{_sysconfdir}/pagekite/pagekite.net.c
 install -p -m 755 %{SOURCE1} %{buildroot}/%{_initrddir}/pagekite
 install -p -m 644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/sysconfig/pagekite
 install -p -m 644 %{SOURCE3} %{buildroot}/%{_sysconfdir}/logrotate.d/pagekite
-#touch %{buildroot}/%{_localstatedir}/log/pagekite/pagekite.log
 cp %{SOURCE9} %{buildroot}/%{_mandir}/man1/pagekite.1.gz
 
 # FC-4 and earlier won't create these automatically; create them here
