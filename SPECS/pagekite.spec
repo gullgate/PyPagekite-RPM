@@ -86,7 +86,6 @@ exit 0
 %postun
 if [ $1 -eq 0 ]; then
     /usr/sbin/userdel pagekite || echo "User \"pagekite\" could not be deleted."
-    /usr/sbin/groupdel pagekite || echo "Group \"pagekite\" could not be deleted."
 fi
 /sbin/service pagekite condrestart &>/dev/null || :
 
@@ -101,7 +100,9 @@ fi
 %{_initrddir}/pagekite
 %{_bindir}/*.py
 %{_sysconfdir}/sysconfig/pagekite
-%config(noreplace) %{_sysconfdir}/pagekite/*.rc
+%config(noreplace) %{_sysconfdir}/pagekite/frontend.rc
+%config(noreplace) %{_sysconfdir}/pagekite/pagekite.rc
+%attr(640,root,pagekite) %config(noreplace) %{_sysconfdir}/pagekite/local.rc
 %{_sysconfdir}/pagekite/pagekite.net.ca_cert
 %attr(755,pagekite,pagekite) %{_localstatedir}/log/pagekite
 
