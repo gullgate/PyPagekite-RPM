@@ -4,6 +4,7 @@ Release: 0%{?dist}
 Summary: System for running publicly visible webs behind restrictive firewalls
 Group: Applications/System
 License: AGPLv3
+Packager: Edvin Dunaway <edvin@eddinn.net>
 URL: https://pagekite.net/
 Source0: http://vampire.eddinn.net/pagekite/%{name}-%{version}.tar.gz
 Source1: pagekite.init
@@ -53,7 +54,7 @@ install -p -m 644 %{SOURCE8} %{buildroot}/%{_sysconfdir}/pagekite/pagekite.net.c
 install -p -m 755 %{SOURCE1} %{buildroot}/%{_initrddir}/pagekite
 install -p -m 644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/sysconfig/pagekite
 install -p -m 644 %{SOURCE3} %{buildroot}/%{_sysconfdir}/logrotate.d/pagekite
-touch %{buildroot}/%{_localstatedir}/log/pagekite/pagekite.log
+#touch %{buildroot}/%{_localstatedir}/log/pagekite/pagekite.log
 cp %{SOURCE9} %{buildroot}/%{_mandir}/man1/pagekite.1.gz
 
 # FC-4 and earlier won't create these automatically; create them here
@@ -63,6 +64,12 @@ touch %{buildroot}/%{_bindir}/pagekite.pyo
 
 %clean
 rm -rf %{buildroot}
+
+%pre
+if ! /usr/bin/id pagekite &>/dev/null; then
+    /usr/sbin/useradd -r -d %{logdir} -s /bin/sh -c "pagekite" pagekite || \
+        echo "Unexpected error adding user \"pagekite\". Aborting installation."
+fi
 
 %post
 /sbin/chkconfig --add pagekite
@@ -76,28 +83,32 @@ if [ $1 = 0 ]; then
 fi
 exit 0
 
+%postun
+if [ $1 -eq 0 ]; then
+    /usr/sbin/userdel pagekite || echo "User \"pagekite\" could not be deleted."
+    /usr/sbin/groupdel pagekite || echo "Group \"pagekite\" could not be deleted."
+fi
+/sbin/service pagekite condrestart &>/dev/null || :
+
 %files
 %defattr(-,root,root)
 %doc README.fedora README.md pagekite.1.gz
 %doc HISTORY.txt agpl-3.0.txt
 %doc pagekite.rc.sample local.rc.sample frontend.rc.sample
 %{_mandir}/man1/*
+%{_sysconfdir}/logrotate.d/pagekite
+%exclude %{_bindir}/*.py[co]
+%{_initrddir}/pagekite
+%defattr(755,pagekite,pagekite)
 %{_localstatedir}/log/pagekite
 %{_bindir}/*.py
-#%{_bindir}/pagekite.py
-#%{_bindir}/pagekite_logparse.py
-#%{_bindir}/pagekite_test.py
-#%{_bindir}/droiddemo.py
-%exclude %{_bindir}/*.py[co]
-%config(noreplace) %{_sysconfdir}/pagekite/pagekite.rc
-%config(noreplace) %{_sysconfdir}/pagekite/frontend.rc
-%config(noreplace) %{_sysconfdir}/pagekite/local.rc
-%config(noreplace) %{_sysconfdir}/pagekite/pagekite.net.ca_cert
-%config(noreplace) %{_sysconfdir}/logrotate.d/pagekite
-%config(noreplace) %{_sysconfdir}/sysconfig/pagekite
-%{_initrddir}/pagekite
+%{_sysconfdir}/sysconfig/pagekite
+%config(noreplace) %{_sysconfdir}/pagekite/*.rc
+%{_sysconfdir}/pagekite/pagekite.net.ca_cert
 
 %changelog
+* Fri May 6 2011 Edvin Dunaway <edvin@eddinn.net> 0.3.19-0
+- added user/group pagekite install/uninstall and code fixup
 * Thu May 5 2011 Edvin Dunaway <edvin@eddinn.net> 0.3.19-0
 - adapting init script and message handling
 * Wed May 4 2011 Edvin Dunaway <edvin@eddinn.net> 0.3.19-0
