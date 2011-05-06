@@ -49,7 +49,7 @@ install -d %{buildroot}/%{_localstatedir}/log/pagekite
 install -d %{buildroot}/%{_mandir}/man1
 install -p -m 644 %{SOURCE5} %{buildroot}/%{_sysconfdir}/pagekite/pagekite.rc
 install -p -m 644 %{SOURCE7} %{buildroot}/%{_sysconfdir}/pagekite/frontend.rc
-install -p -m 644 %{SOURCE6} %{buildroot}/%{_sysconfdir}/pagekite/local.rc
+install -p -m 640 %{SOURCE6} %{buildroot}/%{_sysconfdir}/pagekite/local.rc
 install -p -m 644 %{SOURCE8} %{buildroot}/%{_sysconfdir}/pagekite/pagekite.net.ca_cert
 install -p -m 755 %{SOURCE1} %{buildroot}/%{_initrddir}/pagekite
 install -p -m 644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/sysconfig/pagekite
@@ -99,12 +99,11 @@ fi
 %{_sysconfdir}/logrotate.d/pagekite
 %exclude %{_bindir}/*.py[co]
 %{_initrddir}/pagekite
-%defattr(755,pagekite,pagekite)
-%{_localstatedir}/log/pagekite
 %{_bindir}/*.py
 %{_sysconfdir}/sysconfig/pagekite
 %config(noreplace) %{_sysconfdir}/pagekite/*.rc
 %{_sysconfdir}/pagekite/pagekite.net.ca_cert
+%attr(755,pagekite,pagekite) %{_localstatedir}/log/pagekite
 
 %changelog
 * Fri May 6 2011 Edvin Dunaway <edvin@eddinn.net> 0.3.19-0
