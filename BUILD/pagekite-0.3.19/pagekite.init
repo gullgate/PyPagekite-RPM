@@ -60,7 +60,7 @@ case "$1" in
         $0 start
         ;;
   condrestart)
-       [ -e /var/lock/subsys/pagekite ] && $0 kill -HUP 'cat /var/run/pagekite.py.pid'
+       [ -e /var/lock/subsys/pagekite ] && kill -HUP 'cat /var/run/pagekite.pid'
        ;;
   status)
 	status pagekite.py
@@ -80,11 +80,12 @@ case "$1" in
     	else
         	success
     	fi
-    	echo $RETVAL
+    	echo
+	return $RETVAL
 	}
 	;;
   *)
-	echo "Usage: $0 {start|stop|restarti|reload|status|condrestart}"
+	echo "Usage: $0 {start|stop|restart|reload|status|condrestart}"
 	RETVAL=1
 	;;
 esac
