@@ -19,7 +19,7 @@ prog="pagekite"
 [ ${NETWORKING} = "no" ] && exit 0
 
 # Set default pagekite configuration.
-PAGEKITEOPTIONS="-Z --clean --optfile=/etc/pagekite/pagekite.rc --pidfile=/var/run/pagekite.pid --logfile=/var/log/pagekite/pagekite.log"
+PAGEKITEOPTIONS="-Z --clean --optfile=/etc/pagekite/pagekite.rc --runas=pagekite:pagekite --pidfile=/var/run/pagekite.pid --logfile=/var/log/pagekite/pagekite.log"
 PAGEKITE_PID=/var/run/pagekite.pid
 
 # Source pagekite configuration.
