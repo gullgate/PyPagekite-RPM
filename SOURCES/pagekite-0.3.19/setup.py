@@ -6,11 +6,6 @@ import os.path
 import sys
 from glob import glob
 
-
-#libpath = "./"
-#scriptspath = "%s/scripts" % libpath
-#pluginspath = "%s/plugins" % libpath
-
 #########################################################################
 
 setup(name="pagekite",
@@ -19,9 +14,7 @@ setup(name="pagekite",
       author="Bjarni R. Einarsson",
       author_email="bre@pagekite.net",
       url="http://pagekite.net",
-      scripts=['pagekite.py','pagekite_logparse.py','pagekite_test.py'],
-#      package_dir={'./': './'},
-#      packages=["pagekite"],
+      scripts=['pagekite.py'],
       license="AGPLv3",
       long_description="""
 PageKite is a system for running publicly visible servers (generally web servers) on machines without a direct connection to the Internet, such as mobile devices or computers behind restrictive firewalls.
@@ -29,7 +22,3 @@ Without PageKite, this is a vexingly difficult problem. In spite of the fact tha
 These technicalities - firewalls, NAT, IP addresses, DNS - are the problems PageKite simplifies and solves.
       """
       )
-#      data_files=[
-#                  (scriptspath, glob("scripts/*")),
-#                  (pluginspath, glob("plugins/*")),
-#                  ],

@@ -67,7 +67,7 @@ rm -rf %{buildroot}
 
 %pre
 if ! /usr/bin/id pagekite &>/dev/null; then
-    /usr/sbin/useradd -r -d %{logdir} -s /bin/sh -c "pagekite" pagekite || \
+    /usr/sbin/useradd -r -c "pagekite" pagekite || \
         echo "Unexpected error adding user \"pagekite\". Aborting installation."
 fi
 
