@@ -60,29 +60,20 @@ case "$1" in
         $0 start
         ;;
   condrestart)
-       [ -e /var/lock/subsys/pagekite ] && kill -HUP 'cat /var/run/pagekite.pid'
-       ;;
+	echo -n $"Reloading $prog: "
+        killproc -p $PAGEKITE_PID pagekite.py -HUP
+        RETVAL=$?
+        echo
+       	;;
   status)
 	status pagekite.py
 	RETVAL=$?
 	;;
-  reload)
-	{
-	RETVAL=1
-	pagekite='cat $PAGEKITE_PID 2>/dev/null'
-	echo -n "Reloading pagekite..."
-	if [ -n "${pagekite}" ] && [ -e /proc/"${pagekite}" ]; then
-		kill -HUP $pagekite;
-        	RETVAL=$?
-    	fi
-    	if [ $RETVAL -ne 0 ]; then
-        	failure
-    	else
-        	success
-    	fi
+  reload) 
+    	echo -n $"Reloading $prog: "
+        killproc -p $PAGEKITE_PID pagekite.py -HUP
+        RETVAL=$?
     	echo
-	return $RETVAL
-	}
 	;;
   *)
 	echo "Usage: $0 {start|stop|restart|reload|status|condrestart}"
